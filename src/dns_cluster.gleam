@@ -60,7 +60,7 @@ pub opaque type DnsCluster {
   )
 }
 
-pub opaque type DnsClusterState {
+type DnsClusterState {
   DnsClusterState(
     has_ran: Bool,
     cluster: DnsCluster,
@@ -219,10 +219,10 @@ fn spec(cluster: DnsCluster, parent_subject: Option(Subject(Subject(Message)))) 
               self: process.new_subject(),
               has_ran: False,
             )
-          case #(cluster.query, cluster.interval_millis) {
-            #(_, option.None) -> Nil
-            #(Ignore, _) -> Nil
-            #(DnsQuery(_), _) ->
+          case cluster.query, cluster.interval_millis {
+            _, option.None -> Nil
+            Ignore, _ -> Nil
+            DnsQuery(_), _ ->
               process.send(state.self, DiscoverNodes(option.None, False))
           }
           option.map(parent_subject, process.send(_, state.self))
@@ -238,19 +238,19 @@ fn spec(cluster: DnsCluster, parent_subject: Option(Subject(Subject(Message)))) 
       }
     },
     loop: fn(msg: Message, state: DnsClusterState) {
-      case #(msg, state.cluster.query) {
-        #(Stop(client), _) -> {
+      case msg, state.cluster.query {
+        Stop(client), _ -> {
           option.map(state.poll_timer, process.cancel_timer(_))
           let _ = process.unregister(state.cluster.name)
           process.send(client, Nil)
           state.cluster.logger("warn", "DNS cluster stopped.")
           actor.Stop(process.Normal)
         }
-        #(HasRan(client), _) -> {
+        HasRan(client), _ -> {
           process.send(client, state.has_ran)
           actor.Continue(state: state, selector: option.None)
         }
-        #(DiscoverNodes(maybe_client, manual), DnsQuery(query)) -> {
+        DiscoverNodes(maybe_client, manual), DnsQuery(query) -> {
           let cluster = state.cluster
 
           let errors =
@@ -261,19 +261,19 @@ fn spec(cluster: DnsCluster, parent_subject: Option(Subject(Subject(Message)))) 
               query,
             )
 
-          let state = case #(cluster.interval_millis, maybe_client, manual) {
+          let state = case cluster.interval_millis, maybe_client, manual {
             // If there is an available client, send it a response.
-            #(_, option.Some(client), _) -> {
+            _, option.Some(client), _ -> {
               let connected_nodes = cluster.resolver.list_nodes()
               actor.send(client, #(connected_nodes, errors))
               state
             }
             // If no client and manual call, skip timer reset
-            #(_, _, True) -> state
+            _, _, True -> state
             // If no interval is set, skip timer reset
-            #(option.None, _, _) -> state
+            option.None, _, _ -> state
             // Finally we are confident this is not a manual invocation AND we have an interval
-            #(option.Some(interval_millis), _, _) ->
+            option.Some(interval_millis), _, _ ->
               DnsClusterState(
                 ..state,
                 poll_timer: option.Some(process.send_after(
@@ -288,7 +288,7 @@ fn spec(cluster: DnsCluster, parent_subject: Option(Subject(Subject(Message)))) 
           actor.Continue(state: state, selector: option.None)
         }
 
-        #(DiscoverNodes(maybe_client, _), Ignore) -> {
+        DiscoverNodes(maybe_client, _), Ignore -> {
           state.cluster.logger(
             "warn",
             "DNS cluster is set to ignore, will not discover or connect to nodes.",
