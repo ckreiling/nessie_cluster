@@ -3,9 +3,9 @@
 [![Package Version](https://img.shields.io/hexpm/v/dns_cluster)](https://hex.pm/packages/dns_cluster)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/dns_cluster/)
 
-Small but mighty: a library for forming Erlang clusters in Gleam with DNS.
+Small but mighty: a library for forming Erlang clusters in Gleam via DNS.
 
-This project is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/dns_cluster)
+This is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/dns_cluster)
 to Gleam.
 
 ```sh
