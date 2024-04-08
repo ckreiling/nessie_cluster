@@ -6,7 +6,7 @@
 Small but mighty: a library for forming Erlang clusters in Gleam with DNS.
 
 This project is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/dns_cluster)
-to pure(-ish) Gleam.
+to Gleam.
 
 ```sh
 gleam add gleam_erlang # optional, but highly recommended
@@ -28,7 +28,7 @@ pub fn main() {
         Error(Nil) -> dns_cluster.Ignore
     }
 
-    let cluster: dns_cluster.DnsCluster = 
+    let cluster: dns_cluster.DnsCluster =
         dns_cluster.with_query(dns_cluster.new(), dns_query)
   
     // It is recommended to start the cluster under a supervisor so it's
