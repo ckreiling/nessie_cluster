@@ -9,11 +9,12 @@ This is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/dns_
 to Gleam.
 
 ```sh
-gleam add gleam_erlang # optional, but highly recommended
 gleam add dns_cluster
+gleam add gleam_otp # optional, but highly recommended
+gleam add gleam_erlang # optional, but highly recommended
 ```
 ```gleam
-import gleam/option
+import gleam/option.{Some}
 import gleam/erlang/os
 import gleam/erlang/process
 import gleam/otp/supervisor
@@ -30,11 +31,13 @@ pub fn main() {
 
     let cluster: dns_cluster.DnsCluster =
         dns_cluster.with_query(dns_cluster.new(), dns_query)
+
+    let parent_subject = process.new_subject()
   
     // It is recommended to start the cluster under a supervisor so it's
     // restarted if it crashes.
     let cluster_worker =
-        supervisor.worker(fn(_) { dns_cluster.start_spec(cluster, option.None) })
+        supervisor.worker(fn(_) { dns_cluster.start_spec(cluster, option.Some(parent_subject)) })
 
     let children = fn(children) {
         children
