@@ -1,4 +1,3 @@
-import nessie_cluster.{type DnsCluster, type Resolver, Resolver}
 import gleam/dict.{type Dict}
 import gleam/erlang/atom.{type Atom}
 import gleam/erlang/node.{type ConnectError, type Node}
@@ -6,6 +5,7 @@ import gleam/erlang/process.{type Subject}
 import gleam/option
 import gleam/otp/actor
 import gleam/result
+import nessie_cluster.{type DnsCluster, type Resolver, Resolver}
 
 const call_timeout = 100
 

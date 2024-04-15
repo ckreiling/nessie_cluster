@@ -338,7 +338,7 @@ fn spec(cluster: DnsCluster, parent_subject: Option(Subject(Subject(Message)))) 
 pub fn default_resolver() -> Resolver {
   Resolver(
     connect_node: node.connect,
-    list_nodes: node.visible,
+    list_nodes: fn() { [node.self(), ..node.visible()] },
     basename: fn(a) {
       let split =
         a

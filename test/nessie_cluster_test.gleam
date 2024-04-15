@@ -1,5 +1,3 @@
-import nessie_cluster.{DnsQuery}
-import nessie_cluster/mock_resolver.{TestableDnsCluster}
 import gleam/dict
 import gleam/erlang/atom
 import gleam/erlang/node
@@ -9,6 +7,8 @@ import gleam/option.{None, Some}
 import gleam/set
 import gleeunit
 import gleeunit/should
+import nessie_cluster.{DnsQuery}
+import nessie_cluster/mock_resolver.{TestableDnsCluster}
 
 pub fn main() {
   gleeunit.main()
