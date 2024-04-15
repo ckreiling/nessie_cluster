@@ -1,3 +1,12 @@
+//// An actor that periodically polls DNS for IP addresses and connects to Erlang nodes.
+////
+//// A DNS query is made every `interval` milliseconds to discover new IPs.
+//// Nodes will only be joined if their basename matches the basename of the current node.
+//// Nodes running on remote hosts but with different basenames will fail to connect and
+//// be ignored.
+////
+//// For all configuration options, see the `with_*` functions in this module.
+
 import gleam/erlang/atom.{type Atom}
 import gleam/erlang/node.{type ConnectError, type Node}
 import gleam/erlang/process.{type Subject, type Timer}
@@ -62,7 +71,7 @@ pub opaque type DnsCluster {
 
 pub type NodeConnectError {
   NodeConnectError(
-    /// The `nodename@nodeip` string that failed to connect.
+    /// The `nodename@nodeip` atom that failed to connect.
     node: Atom,
     /// The error that occurred while trying to connect.
     error: ConnectError,
@@ -110,7 +119,8 @@ pub fn with_query(for cluster: DnsCluster, using q: DnsQuery) -> DnsCluster {
 
 /// Turn logging on or off for the given cluster.
 ///
-/// Defaults to a `gleam/io.println()` call.
+/// Defaults to a `gleam/io.println()` call, prepending the log level
+/// to the message.
 pub fn with_logger(for cluster: DnsCluster, using logger: Logger) -> DnsCluster {
   DnsCluster(..cluster, logger: logger)
 }
@@ -128,9 +138,8 @@ pub fn with_interval(
 
 /// Set a custom resolver for the given cluster.
 ///
-/// The default resolver will query for A and AAAA
-/// records, and try to connect to Erlang nodes at
-/// all of the returned IP addresses.
+/// For details on the default resolver, see the documentation for the `default_resolver`
+/// function.
 ///
 /// Most users will not need to change this, but
 /// it can be useful for testing or more advanced
@@ -202,6 +211,10 @@ pub fn has_ran(
 
 /// Starts an actor which will periodically poll DNS for
 /// IP addresses and connect to Erlang nodes.
+///
+/// If the cluster's query is `Ignore`, the actor will start
+/// successfully, but will not perform any DNS lookups or
+/// attempt to connect to any nodes.
 pub fn start_spec(
   cluster: DnsCluster,
   parent_subject: Option(Subject(Subject(Message))),
