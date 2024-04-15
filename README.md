@@ -5,7 +5,7 @@
 
 Small but mighty: a library for forming Erlang clusters in Gleam via DNS.
 
-This is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/nessie_cluster)
+This is a port of the [Elixir `DNSCluster` library](https://hex.pm/packages/dns_cluster)
 to Gleam. (Note this project does not have any affiliation with the Elixir library)
 
 ## Examples
