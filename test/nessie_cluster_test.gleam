@@ -1,5 +1,5 @@
-import dns_cluster.{DnsQuery}
-import dns_cluster/mock_resolver.{TestableDnsCluster}
+import nessie_cluster.{DnsQuery}
+import nessie_cluster/mock_resolver.{TestableDnsCluster}
 import gleam/dict
 import gleam/erlang/atom
 import gleam/erlang/node
@@ -22,7 +22,7 @@ const example_dns = [#(example_domain_name, example_ips)]
 
 pub fn sends_parent_subject_test() {
   let TestableDnsCluster(cluster: cluster, ..) =
-    mock_resolver.new_dns_cluster(
+    mock_resolver.new_cluster(
       dns: dict.from_list(example_dns),
       connect_errors: dict.new(),
     )
@@ -31,9 +31,9 @@ pub fn sends_parent_subject_test() {
 
   let started_subject =
     cluster
-    |> dns_cluster.with_query(DnsQuery(example_domain_name))
-    |> dns_cluster.with_interval(None)
-    |> dns_cluster.start_spec(Some(parent_subject))
+    |> nessie_cluster.with_query(DnsQuery(example_domain_name))
+    |> nessie_cluster.with_interval(None)
+    |> nessie_cluster.start_spec(Some(parent_subject))
     |> should.be_ok()
 
   let subject =
@@ -49,28 +49,28 @@ pub fn sends_parent_subject_test() {
 
 pub fn connects_to_valid_host_test() {
   let TestableDnsCluster(cluster: cluster, ..) =
-    mock_resolver.new_dns_cluster(
+    mock_resolver.new_cluster(
       dns: dict.from_list(example_dns),
       connect_errors: dict.new(),
     )
 
   let cluster =
     cluster
-    |> dns_cluster.with_query(DnsQuery(example_domain_name))
-    |> dns_cluster.with_interval(None)
-    |> dns_cluster.start_spec(None)
+    |> nessie_cluster.with_query(DnsQuery(example_domain_name))
+    |> nessie_cluster.with_interval(None)
+    |> nessie_cluster.start_spec(None)
     |> should.be_ok()
 
   cluster
-  |> dns_cluster.has_ran(100)
+  |> nessie_cluster.has_ran(100)
   |> should.be_ok()
   |> should.be_false()
 
   let #(nodes, errors) =
-    should.be_ok(dns_cluster.discover_nodes(cluster, Some(100)))
+    should.be_ok(nessie_cluster.discover_nodes(cluster, Some(100)))
 
   cluster
-  |> dns_cluster.has_ran(100)
+  |> nessie_cluster.has_ran(100)
   |> should.be_ok()
   |> should.be_true()
 
@@ -93,28 +93,28 @@ pub fn surfaces_connect_errors_test() {
     dict.from_list([#(problem_node, node.LocalNodeIsNotAlive)])
 
   let TestableDnsCluster(cluster: cluster, ..) =
-    mock_resolver.new_dns_cluster(
+    mock_resolver.new_cluster(
       dns: dict.from_list(example_dns),
       connect_errors: connect_errors,
     )
 
   let cluster =
     cluster
-    |> dns_cluster.with_query(DnsQuery(example_domain_name))
-    |> dns_cluster.with_interval(None)
-    |> dns_cluster.start_spec(None)
+    |> nessie_cluster.with_query(DnsQuery(example_domain_name))
+    |> nessie_cluster.with_interval(None)
+    |> nessie_cluster.start_spec(None)
     |> should.be_ok()
 
   let #(nodes, errors) =
-    should.be_ok(dns_cluster.discover_nodes(cluster, Some(100)))
+    should.be_ok(nessie_cluster.discover_nodes(cluster, Some(100)))
 
   cluster
-  |> dns_cluster.has_ran(100)
+  |> nessie_cluster.has_ran(100)
   |> should.be_ok()
   |> should.be_true()
 
   should.equal(errors, [
-    dns_cluster.NodeConnectError(
+    nessie_cluster.NodeConnectError(
       node: problem_node,
       error: node.LocalNodeIsNotAlive,
     ),

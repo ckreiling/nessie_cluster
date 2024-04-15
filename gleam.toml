@@ -1,5 +1,17 @@
-name = "dns_cluster"
-version = "1.0.0"
+name = "nessie_cluster"
+version = "0.1.0"
+
+licenses = ["Apache-2.0"]
+
+description = "A small DNS clustering library for Gleam applications."
+
+target = "erlang"
+
+repository = { type = "github", user = "ckreiling", repo = "dns_cluster" }
+
+links = []
+
+gleam = ">= 1.0.0"
 
 # Fill out these fields if you intend to generate HTML documentation or publish
 # your project to the Hex package manager.
@@ -14,9 +26,9 @@ version = "1.0.0"
 
 [dependencies]
 gleam_stdlib = "~> 0.34 or ~> 1.0"
-nessie = "~> 0.1"
-gleam_otp = "~> 0.10"
-gleam_erlang = "~> 0.25"
+nessie = "~> 0.1 or ~> 1.0"
+gleam_otp = "~> 0.10 or ~> 1.0"
+gleam_erlang = "~> 0.25 or ~> 1.0"
 
 [dev-dependencies]
 gleeunit = "~> 1.0"

@@ -10,8 +10,8 @@ packages = [
 ]
 
 [requirements]
-gleam_erlang = { version = "~> 0.25"}
-gleam_otp = { version = "~> 0.10" }
+gleam_erlang = { version = "~> 0.25 or ~> 1.0" }
+gleam_otp = { version = "~> 0.10 or ~> 1.0" }
 gleam_stdlib = { version = "~> 0.34 or ~> 1.0" }
 gleeunit = { version = "~> 1.0" }
-nessie = { version = "~> 0.1" }
+nessie = { version = "~> 0.1 or ~> 1.0" }

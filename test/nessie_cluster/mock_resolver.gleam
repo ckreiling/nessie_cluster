@@ -1,4 +1,4 @@
-import dns_cluster.{type DnsCluster, type Resolver, Resolver}
+import nessie_cluster.{type DnsCluster, type Resolver, Resolver}
 import gleam/dict.{type Dict}
 import gleam/erlang/atom.{type Atom}
 import gleam/erlang/node.{type ConnectError, type Node}
@@ -41,7 +41,7 @@ type Message {
   Shutdown
 }
 
-pub fn new_dns_cluster(
+pub fn new_cluster(
   dns dns_mock: DnsMock,
   connect_errors connect_error_mock: ConnectErrorMock,
 ) -> TestableDnsCluster {
@@ -68,7 +68,7 @@ pub fn new_dns_cluster(
       },
     )
 
-  let cluster = dns_cluster.with_resolver(dns_cluster.new(), resolver)
+  let cluster = nessie_cluster.with_resolver(nessie_cluster.new(), resolver)
 
   TestableDnsCluster(cluster, fn() {
     actor.call(resolver_actor, ConnectCalls, call_timeout)

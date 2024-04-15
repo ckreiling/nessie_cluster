@@ -95,17 +95,17 @@ type DnsClusterState {
 /// `with_query`.
 pub fn new() -> DnsCluster {
   DnsCluster(
-    name: atom.create_from_string("dns_cluster"),
+    name: atom.create_from_string("nessie_cluster"),
     query: Ignore,
     interval_millis: Some(5000),
-    logger: default_logger("[dns_cluster]"),
+    logger: default_logger("[nessie_cluster]"),
     resolver: default_resolver(),
   )
 }
 
 /// Use a custom name for the process.
 ///
-/// The default `dns_cluster` name is typically sufficient.
+/// The default `nessie_cluster` name is typically sufficient.
 pub fn with_name(for cluster: DnsCluster, using name: Atom) -> DnsCluster {
   DnsCluster(..cluster, name: name)
 }
