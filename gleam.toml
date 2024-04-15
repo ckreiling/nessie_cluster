@@ -7,7 +7,7 @@ description = "A small DNS clustering library for Gleam applications."
 
 target = "erlang"
 
-repository = { type = "github", user = "ckreiling", repo = "dns_cluster" }
+repository = { type = "github", user = "ckreiling", repo = "nessie_cluster" }
 
 links = []
 
