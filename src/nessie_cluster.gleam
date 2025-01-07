@@ -362,7 +362,7 @@ pub fn default_resolver() -> Resolver {
 
       let #(ips, _) =
         [ipv4_addrs, ipv6_addrs]
-        |> list.concat()
+        |> list.flatten()
         |> list.map(nessie.ip_to_string)
         |> result.partition()
 
